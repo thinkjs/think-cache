@@ -9,10 +9,9 @@ const debounceInstance = new Debounce();
  * can not be defined a arrow function, because has `this` in it.
  * @param {String} name
  * @param {Mixed} value
- * @param {boolean}reg
  * @param {String|Object} config
  */
-function thinkCache(name, value, reg, config) {
+function thinkCache(name, value, config) {
   assert(name && helper.isString(name), 'cache.name must be a string');
   if (config) {
     config = helper.parseAdapterConfig(this.config('cache'), config);
@@ -25,7 +24,8 @@ function thinkCache(name, value, reg, config) {
   const instance = new Handle(config);
   // delete cache
   if (value === null) {
-    if (reg === undefined || reg !== true) {
+    const patt = /^[a-z0-9_.]+$/;
+    if (patt.test(name)) {
       return Promise.resolve(instance.delete(name));
     } else {
       return Promise.resolve(instance.deleteRegKey(name));
@@ -60,4 +60,5 @@ function thinkCache(name, value, reg, config) {
   // set cache
   return Promise.resolve(instance.set(name, value));
 }
+
 module.exports = thinkCache;

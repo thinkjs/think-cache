@@ -36,8 +36,9 @@ class Redis {
   delete() {
     return Promise.resolve(1);
   }
+
   deleteRegKey() {
-    return Promise.resolve(1);
+    return Promise.resolve('OK');
   }
 }
 
@@ -49,22 +50,23 @@ function getConfig() {
 }
 
 test('delete by cache name', async t => {
-  let ret = await cacheDB.apply(thisConfig, ['name', null,false, getConfig()]);
+  let ret = await cacheDB.apply(thisConfig, ['name', null, getConfig()]);
   t.is(1, ret);
 });
 
-test('delete by regular express cache name', async t => {
-  let ret = await cacheDB.apply(thisConfig, ['name', null,true, getConfig()]);
-  t.is(1, ret);
+test('delete by cache nam*', async t => {
+  let ret = await cacheDB.apply(thisConfig, ['nam*', null, getConfig()]);
+  t.is('OK', ret);
 });
+
 
 test('get by cache name', async t => {
-  let ret = await cacheDB.apply(thisConfig, ['name', undefined, undefined,getConfig()]);
+  let ret = await cacheDB.apply(thisConfig, ['name', undefined, getConfig()]);
   t.is('thinkjs', ret);
 });
 
 test('set cache ', async t => {
-  let ret = await cacheDB.apply(thisConfig, ['name', 'thinkjs',false, getConfig()]);
+  let ret = await cacheDB.apply(thisConfig, ['name', 'thinkjs', getConfig()]);
   t.true(ret);
 });
 
@@ -89,7 +91,6 @@ test('get cache when value is function and function return undefined', async t =
     function(arg) {
       return arg;
     },
-    false,
     getConfig()
   ]);
   t.is(argName, ret);
@@ -102,7 +103,6 @@ test('get cache when value is function and function return value', async t => {
     function(arg) {
       return arg;
     },
-    false,
     getConfig()
   ]);
   t.is('thinkjs', ret);
