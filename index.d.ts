@@ -1,3 +1,21 @@
+type  ThinkCacheType = 'file' | 'redis';
+
+interface ThinkCacheOptionRedis {
+  /**
+   * 缓存过期时间（毫秒）
+   */
+  timeout?: number;
+}
+
+interface ThinkCacheOption {
+  type?: ThinkCacheType;
+  /**
+   * 缓存过期时间（毫秒）
+   */
+  timeout?: number;
+  redis?: ThinkCacheOptionRedis;
+}
+
 interface ThinkCacheCtx {
   /**
    * get cache
@@ -13,14 +31,14 @@ interface ThinkCacheCtx {
    * else mean set cache
    * @memberOf CacheExtend
    */
-  cache(name: string, value?: any, config?: object): Promise<any>;
+  cache(name: string, value?: any, config?: ThinkCacheType | ThinkCacheOption): Promise<any>;
 
   /**
    * get cache
    *
    * @memberOf CacheExtend
    */
-  cache(name: string, value: Function): Promise<any>;
+  cache(name: string, value: Promise<any>): Promise<any>;
 }
 
 declare module 'thinkjs' {
